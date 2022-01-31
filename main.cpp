@@ -1,10 +1,10 @@
 #include "includes.h"
 
 GLfloat vertex[] = {	// background mapping
-	0.0f, 0.0f, -1.0f,			0.0f, 0.0f,
-	1920.0f, 0.0f, -1.0f, 		1.0f, 0.0f,
-	1920.0f, 1080.0f, -1.0f,	1.0f, 1.0f,
-	0.0f, 1080.0f, -1.0f,		0.0f, 1.0f
+	-1.0f, -1.0f, -1.0f,			0.0f, 0.0f,
+	1.0f, -1.0f, -1.0f, 		1.0f, 0.0f,
+	1.0f, 1.0f, -1.0f,	1.0f, 1.0f,
+	-1.0f, 1.0f, -1.0f,		0.0f, 1.0f
 };
 
 GLuint index[] = {
@@ -67,7 +67,7 @@ int main() {
 	Shader mainShader("res/shaders/main.shader"); // Main shader, accepts MVP matrix (currently only MP)
 	Shader backgroundShader("res/shaders/background.shader");	// Accepts only projection matrix
 
-	
+	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 projectionMatrix = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 1.0f, -1.0f); // Proj matrix
 
@@ -97,11 +97,9 @@ int main() {
 
 		// Draw background
 		backgroundTexture.bind();
-		backgroundShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
 		Renderer.Draw(VAO, IBO, backgroundShader);
 		backgroundTexture.unbind();
 
-		// Draw square
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(moveCoordX, moveCoordY, 0.0f));
 		mainShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
 		mainShader.setUniformMat4("modelMatrix", glm::value_ptr(modelMatrix));
