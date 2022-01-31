@@ -43,6 +43,7 @@ int main() {
 	stbi_set_flip_vertically_on_load(true);
 	Texture backgroundTexture(GL_TEXTURE_2D, GL_RGB, "res/textures/worldbackground.png");
 
+	// VBO, IBO, VAO for Background Image
 	VertexBuffer VBO(vertex, sizeof(vertex), GL_STATIC_DRAW);
 	IndexBuffer IBO(index, 6, GL_STATIC_DRAW);
 	VertexBufferLayout layout;
@@ -51,6 +52,7 @@ int main() {
 	VertexArray VAO;
 	VAO.AddVertexBuffer(VBO, layout);
 
+	// VBO, IBO, VAO for cube
 	VertexBuffer quadVBO(quadVertex, sizeof(quadVertex), GL_STATIC_DRAW);
 	IndexBuffer quadIBO(index, 6, GL_STATIC_DRAW);
 	VertexBufferLayout quadLayout;
@@ -58,15 +60,16 @@ int main() {
 	VertexArray quadVAO;
 	quadVAO.AddVertexBuffer(quadVBO, quadLayout);
 
-
+	// Renderer object
 	Renderer Renderer;
 
-	Shader mainShader("res/shaders/main.shader");
-	Shader backgroundShader("res/shaders/background.shader");
+	// Shaders to render objects
+	Shader mainShader("res/shaders/main.shader"); // Main shader, accepts MVP matrix (currently only MP)
+	Shader backgroundShader("res/shaders/background.shader");	// Accepts only projection matrix
 
 	
 
-	glm::mat4 projectionMatrix = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 1.0f, -1.0f);
+	glm::mat4 projectionMatrix = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 1.0f, -1.0f); // Proj matrix
 
 #pragma region imgui setup
 	IMGUI_CHECKVERSION();
@@ -92,11 +95,13 @@ int main() {
 			ImGui::SliderFloat("Move Y position", &moveCoordY, 0.0f, 1080.0f);
 		ImGui::End();
 
+		// Draw background
 		backgroundTexture.bind();
 		backgroundShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
 		Renderer.Draw(VAO, IBO, backgroundShader);
 		backgroundTexture.unbind();
 
+		// Draw square
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(moveCoordX, moveCoordY, 0.0f));
 		mainShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
 		mainShader.setUniformMat4("modelMatrix", glm::value_ptr(modelMatrix));
