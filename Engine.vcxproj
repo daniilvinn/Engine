@@ -184,9 +184,15 @@
     <ClInclude Include="includes.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="imgui.ini" />
+    <None Include="README.md" />
     <None Include="res\shaders\background.shader" />
     <None Include="res\shaders\main.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\worldbackground.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

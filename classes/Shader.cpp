@@ -17,23 +17,28 @@ void Shader::Unbind() const
 }
 
 unsigned int Shader::getUniformLoc(const char* uniform) const {
+	glUseProgram(m_RendererID);
 	return glGetUniformLocation(m_RendererID, uniform);
 }
 
 void Shader::setUniform1i(const char* uniform, int value) {
-	glUniform1i(glGetUniformLocation(m_RendererID, uniform), value);
+	glUseProgram(m_RendererID);
+	GLCall(glUniform1i(glGetUniformLocation(m_RendererID, uniform), value));
 }
 
 void Shader::setUniform1f(const char* uniform, float value) {
-	glUniform1f(glGetUniformLocation(m_RendererID, uniform), value);
+	glUseProgram(m_RendererID);
+	GLCall(glUniform1f(glGetUniformLocation(m_RendererID, uniform), value));
 }
 
 void Shader::setUniformMat4(const char* uniform, const float* value) {
-	glUniformMatrix4fv(glGetUniformLocation(m_RendererID, uniform), 1, GL_FALSE, value);
+	glUseProgram(m_RendererID);
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(m_RendererID, uniform), 1, GL_FALSE, value));
 };
 
 void Shader::setUniformVec3(const char* uniform, const float* value) {
-	glUniform3fv(glGetUniformLocation(m_RendererID, uniform), 1, value);
+	glUseProgram(m_RendererID);
+	GLCall(glUniform3fv(glGetUniformLocation(m_RendererID, uniform), 1, value));
 }
 
 void Shader::ParseShaderFile(const std::string& filepath) {

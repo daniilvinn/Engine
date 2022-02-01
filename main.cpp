@@ -1,10 +1,13 @@
 #include "includes.h"
 
-GLfloat vertex[] = {	// background mapping
-	-1.0f, -1.0f, -1.0f,			0.0f, 0.0f,
-	1.0f, -1.0f, -1.0f, 		1.0f, 0.0f,
-	1.0f, 1.0f, -1.0f,	1.0f, 1.0f,
-	-1.0f, 1.0f, -1.0f,		0.0f, 1.0f
+#define WINDOW_WIDTH 1920.0f
+#define WINDOW_HEIGHT 1080.0f
+
+GLfloat vertex[] = {			// background mapping
+	-1.0f, -1.0f,	0.0f,		0.0f, 0.0f,
+	 1.0f, -1.0f,	0.0f,		1.0f, 0.0f,
+	 1.0f,  1.0f,	0.0f,		1.0f, 1.0f,
+	-1.0f,  1.0f,	0.0f,		0.0f, 1.0f
 };
 
 GLuint index[] = {
@@ -13,11 +16,12 @@ GLuint index[] = {
 };
 
 
-GLfloat quadVertex[] = {	// square mapping
-	0.0f, 0.0f, 0.0f,	
-	100.0f, 0.0f, 0.0f, 
-	100.0f, 100.0f, 0.0f,
-	0.0f, 100.0f, 0.0f
+GLfloat quadVertex[] = {	
+	// square mapping
+	-50.0f, -50.0f,	-1.0f,	
+	 50.0f, -50.0f,	-1.0f, 
+	 50.0f,  50.0f,	-1.0f,
+	-50.0f,  50.0f,	-1.0f
 };
 
 
@@ -38,7 +42,6 @@ int main() {
 	};
 #pragma endregion
 	
-	glViewport(0, 0, 1920, 1080);
 
 	stbi_set_flip_vertically_on_load(true);
 	Texture backgroundTexture(GL_TEXTURE_2D, GL_RGB, "res/textures/worldbackground.png");
@@ -64,12 +67,16 @@ int main() {
 	Renderer Renderer;
 
 	// Shaders to render objects
-	Shader mainShader("res/shaders/main.shader"); // Main shader, accepts MVP matrix (currently only MP)
+	Shader mainShader("res/shaders/main.shader");				// Main shader, accepts MVP matrix (currently only MP)
 	Shader backgroundShader("res/shaders/background.shader");	// Accepts only projection matrix
 
-	glEnable(GL_DEPTH_TEST);
-
-	glm::mat4 projectionMatrix = glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, 1.0f, -1.0f); // Proj matrix
+	glm::mat4 projectionMatrix = glm::ortho(
+		-WINDOW_WIDTH / 2.0f, 
+		WINDOW_WIDTH / 2.0f, 
+		-WINDOW_HEIGHT / 2.0f,
+		WINDOW_HEIGHT / 2.0f, 
+		1.0f, 
+		-1.0f);
 
 #pragma region imgui setup
 	IMGUI_CHECKVERSION();
@@ -79,33 +86,34 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 460 core");
 #pragma endregion
+	
+
+
 
 	while (!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
-		static float moveCoordX;
-		static float moveCoordY;
 
-		ImGui::Begin("Window");
-			ImGui::SliderFloat("Move X position", &moveCoordX, 0.0f, 1920.0f);
-			ImGui::SliderFloat("Move Y position", &moveCoordY, 0.0f, 1080.0f);
-		ImGui::End();
-
-		// Draw background
-		backgroundTexture.bind();
-		Renderer.Draw(VAO, IBO, backgroundShader);
+		backgroundTexture.bind(); 
+		Renderer.Draw(VAO, IBO, backgroundShader); 
 		backgroundTexture.unbind();
 
+#pragma region imgui
+		static float moveCoordX;
+		static float moveCoordY;
+		ImGui::Begin("Window");
+			ImGui::SliderFloat("Move X position", &moveCoordX, -960.0f, 960.0f);
+			ImGui::SliderFloat("Move Y position", &moveCoordY, -540.0f, 540.0f);
+		ImGui::End();
+#pragma endregion
+		
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(moveCoordX, moveCoordY, 0.0f));
-		mainShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
 		mainShader.setUniformMat4("modelMatrix", glm::value_ptr(modelMatrix));
-
+		mainShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
 		Renderer.Draw(quadVAO, quadIBO, mainShader);
-
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -117,6 +125,8 @@ int main() {
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 
+	glDeleteProgram(mainShader.getID());
+	glDeleteProgram(backgroundShader.getID());
 	glfwTerminate();
 	return 0;
 }

@@ -133,5 +133,13 @@
     <None Include="res\shaders\main.shader" />
     <None Include="imgui.ini" />
     <None Include="res\shaders\background.shader" />
+    <None Include="README.md" />
+    <None Include=".gitignore" />
+    <None Include=".gitattributes" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\worldbackground.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
   </ItemGroup>
 </Project>
