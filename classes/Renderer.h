@@ -10,11 +10,30 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include <Graphics.h>
+#include <vector>
 
 void GLClearErrorBuffer(); 
 bool GLLogCall(const char* function, const char* file, int line);
 
-class Renderer {
-public:
-	void Draw(const VertexArray& VAO, const IndexBuffer& IBO, const Shader& shader) const;
-};
+namespace Engine {
+
+	static struct RenderData {
+		float m_Positions[8] = {
+			-1.0f, -1.0f,
+			 1.0f, -1.0f,
+			 1.0f,  1.0f,
+			-1.0f,  1.0f
+		};
+	};
+	class Renderer {
+	private:
+		RenderData s_Data;
+	public:
+		static void Draw(const VertexArray& VAO, const IndexBuffer& IBO, const Shader& shader);
+		static void Clear();
+		static void SetBackgroundTexture();
+		static void DrawQuad();
+	};
+
+}

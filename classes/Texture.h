@@ -1,24 +1,18 @@
 #pragma once
-// TODO: all of below declared stuff
-// more of TODO:
-// Needed to create a comfortable creating character object
-// DONE: simplify texture loading
+#include <stb_image.h>
 
-#define VEenum GLenum
-
-typedef bool VEint; // my own GL-like typedef :)) VE = Vinnik Engine :D
-typedef unsigned int TEXid; // definition of texture id
+using TexID = unsigned int; // definition of texture id
 
 class Texture {
 private:
-	TEXid textureID;
+	TexID textureID;
 	int width;
 	int height;
 	int channels;
 	unsigned char* imageData;
 	GLenum target;
 public:
-	Texture(GLenum target, VEenum type, const char* filepath) {
+	Texture(GLenum target, GLenum type, const char* filepath) {
 		this->target = target;
 		imageData = stbi_load(filepath, &width, &height, &channels, 0);
 		glGenTextures(1, &textureID);
@@ -27,7 +21,7 @@ public:
 		glGenerateMipmap(target);
 		STBI_FREE(imageData);
 	}
-	TEXid getID() const {
+	TexID getID() const {
 		return textureID;
 	}
 	void bind() const {

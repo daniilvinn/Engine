@@ -20,7 +20,11 @@
 #include <stb_image.h>
 
 // Classes
+
+#include <EngineCore.h>
 #include <Renderer.h>
+#include <Camera.h>
+#include <Timestep.h>
 #include <Shader.h>
 #include <VertexBuffer.h>
 #include <VertexBufferLayout.h>

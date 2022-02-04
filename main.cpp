@@ -4,10 +4,10 @@
 #define WINDOW_HEIGHT 1080.0f
 
 GLfloat vertex[] = {			// background mapping
-	-1.0f, -1.0f,	0.0f,		0.0f, 0.0f,
-	 1.0f, -1.0f,	0.0f,		1.0f, 0.0f,
-	 1.0f,  1.0f,	0.0f,		1.0f, 1.0f,
-	-1.0f,  1.0f,	0.0f,		0.0f, 1.0f
+	-960.0f, -545.0f,	0.0f,		0.0f, 0.0f,
+	 960.0f, -545.0f,	0.0f,		1.0f, 0.0f,
+	 960.0f,  545.0f,	0.0f,		1.0f, 1.0f,
+	-960.0f,  545.0f,	0.0f,		0.0f, 1.0f
 };
 
 GLuint index[] = {
@@ -63,9 +63,6 @@ int main() {
 	VertexArray quadVAO;
 	quadVAO.AddVertexBuffer(quadVBO, quadLayout);
 
-	// Renderer object
-	Renderer Renderer;
-
 	// Shaders to render objects
 	Shader mainShader("res/shaders/main.shader");				// Main shader, accepts MVP matrix (currently only MP)
 	Shader backgroundShader("res/shaders/background.shader");	// Accepts only projection matrix
@@ -77,7 +74,7 @@ int main() {
 		WINDOW_HEIGHT / 2.0f, 
 		1.0f, 
 		-1.0f);
-
+	
 #pragma region imgui setup
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -87,20 +84,18 @@ int main() {
 	ImGui_ImplOpenGL3_Init("#version 460 core");
 #pragma endregion
 	
-
-
-
 	while (!glfwWindowShouldClose(window)) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+		Engine::Renderer::Clear();
+		EngineCore::onUpdate();
+		EngineCore::handleEvents(window);
+
 		glm::mat4 modelMatrix = glm::mat4(1.0f);
 
-		backgroundTexture.bind(); 
-		Renderer.Draw(VAO, IBO, backgroundShader); 
+		backgroundTexture.bind();
+		backgroundShader.setUniformMat4("modelMatrix", glm::value_ptr(Engine::Camera::GetProjectionViewMatrix()));
+		Engine::Renderer::Draw(VAO, IBO, backgroundShader); 
 		backgroundTexture.unbind();
-
+		
 #pragma region imgui
 		static float moveCoordX;
 		static float moveCoordY;
@@ -111,9 +106,11 @@ int main() {
 #pragma endregion
 		
 		modelMatrix = glm::translate(modelMatrix, glm::vec3(moveCoordX, moveCoordY, 0.0f));
+		modelMatrix = glm::translate(modelMatrix, glm::vec3(-Engine::Camera::GetPosition(), 0.0f));
 		mainShader.setUniformMat4("modelMatrix", glm::value_ptr(modelMatrix));
-		mainShader.setUniformMat4("projectionMatrix", glm::value_ptr(projectionMatrix));
-		Renderer.Draw(quadVAO, quadIBO, mainShader);
+		mainShader.setUniformMat4("projectionMatrix", glm::value_ptr(Engine::Camera::GetProjectionViewMatrix()));
+		Engine::Renderer::Draw(quadVAO, quadIBO, mainShader);
+
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -124,6 +121,7 @@ int main() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+
 
 	glDeleteProgram(mainShader.getID());
 	glDeleteProgram(backgroundShader.getID());

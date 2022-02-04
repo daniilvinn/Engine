@@ -17,6 +17,10 @@ class Shader {
 	void CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 public:
 	Shader(const std::string& filepath);
+	Shader();
+	void CreateShader(const char* filepath);
+	static Shader* CREATE_SHADER();
+	static Shader* CREATE_SHADER(const char* filepath);
 	unsigned int getID() const;
 	void Bind() const;
 	void Unbind() const;

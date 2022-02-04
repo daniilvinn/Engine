@@ -118,7 +118,41 @@ void Shader::CreateShader(const std::string& vertexShader, const std::string& fr
 	m_RendererID = program;
 }
 
+void Shader::CreateShader(const char* filepath)
+{
+	ParseShaderFile(filepath);
+	unsigned int program = glCreateProgram();
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, source.VertexSource);
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, source.FragmentSource);
+
+	glAttachShader(program, vs);
+	glAttachShader(program, fs);
+	glLinkProgram(program);
+	glValidateProgram(program);
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+	m_RendererID = program;
+}
+
+Shader* Shader::CREATE_SHADER()
+{
+	Shader* instance = new Shader();
+	return instance;
+}
+
+Shader* Shader::CREATE_SHADER(const char* filepath) {
+	Shader* instance = new Shader(filepath);
+	return instance;
+}
+
 Shader::Shader(const std::string& filepath) {
 	ParseShaderFile(filepath);
 	CreateShader(source.VertexSource, source.FragmentSource);
+}
+
+Shader::Shader()
+{
+	return;
 }

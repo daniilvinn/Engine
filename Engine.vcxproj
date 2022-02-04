@@ -120,8 +120,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\DANIL\source\repos\Engine\Engine\dependencies\glm;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\ImGUI;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\GLFW\include;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\GLEW\include;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\stb_image;C:\Users\DANIL\source\repos\Engine\Engine\classes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,8 +135,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>STB_IMAGE_IMPLEMENTATION;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\DANIL\source\repos\Engine\Engine\dependencies\glm;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\ImGUI;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\GLFW\include;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\GLEW\include;C:\Users\DANIL\source\repos\Engine\Engine\dependencies\stb_image;C:\Users\DANIL\source\repos\Engine\Engine\classes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,13 +147,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="classes\Camera.cpp" />
     <ClCompile Include="classes\IndexBuffer.cpp" />
     <ClCompile Include="classes\Renderer.cpp" />
     <ClCompile Include="classes\Shader.cpp" />
     <ClCompile Include="classes\VertexArray.cpp" />
     <ClCompile Include="classes\VertexBuffer.cpp" />
-    <ClCompile Include="classes\Engine.cpp" />
-    <ClCompile Include="classes\GUI.cpp" />
     <ClCompile Include="dependencies\ImGUI\imgui.cpp" />
     <ClCompile Include="dependencies\ImGUI\imgui_demo.cpp" />
     <ClCompile Include="dependencies\ImGUI\imgui_draw.cpp" />
@@ -159,10 +160,14 @@
     <ClCompile Include="dependencies\ImGUI\imgui_impl_opengl3.cpp" />
     <ClCompile Include="dependencies\ImGUI\imgui_tables.cpp" />
     <ClCompile Include="dependencies\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="classes\EngineCore.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="classes\Timestep.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classes\Camera.h" />
+    <ClInclude Include="classes\EngineCore.h" />
+    <ClInclude Include="classes\Graphics.h" />
     <ClInclude Include="classes\IndexBuffer.h" />
     <ClInclude Include="classes\Renderer.h" />
     <ClInclude Include="classes\Shader.h" />
@@ -170,8 +175,6 @@
     <ClInclude Include="classes\VertexArray.h" />
     <ClInclude Include="classes\VertexBuffer.h" />
     <ClInclude Include="classes\VertexBufferLayout.h" />
-    <ClInclude Include="classes\Engine.h" />
-    <ClInclude Include="classes\GUI.h" />
     <ClInclude Include="dependencies\ImGUI\imconfig.h" />
     <ClInclude Include="dependencies\ImGUI\imgui.h" />
     <ClInclude Include="dependencies\ImGUI\imgui_impl_glfw.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="dependencies\ImGUI\imstb_textedit.h" />
     <ClInclude Include="dependencies\ImGUI\imstb_truetype.h" />
     <ClInclude Include="includes.h" />
+    <ClInclude Include="classes\Timestep.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
